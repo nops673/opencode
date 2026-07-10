@@ -54,6 +54,8 @@ import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
 import { createSessionTabs } from "@/pages/session/helpers"
 import { createTextFragment, getCursorPosition, setCursorPosition, setRangeEdge } from "./prompt-input/editor-dom"
+import { createMediaQuery } from "@solid-primitives/media"
+import { IabToggle } from "./iab-toggle"
 import { createPromptAttachments } from "./prompt-input/attachments"
 import { ACCEPTED_FILE_TYPES, pickAttachmentFiles } from "./prompt-input/files"
 import {
@@ -360,6 +362,7 @@ export const PromptInput: Component<PromptInputProps> = (props) => {
   const buttons = createMemo(() => motion(buttonsSpring()))
   const shell = createMemo(() => motion(1 - buttonsSpring()))
   const control = createMemo(() => ({ height: "28px", ...buttons() }))
+  const isDesktop = createMediaQuery("(min-width: 768px)")
 
   const commentCount = createMemo(() => {
     if (store.mode === "shell") return 0
@@ -1740,6 +1743,9 @@ export const PromptInput: Component<PromptInputProps> = (props) => {
                     <ComposerAgentControl state={agentControlState()} />
                   </Show>
                   {props.toolbar}
+                  <Show when={isDesktop()}>
+                    <IabToggle />
+                  </Show>
                   <ComposerModelControl state={modelControlState()} />
                   <Show when={!providersLoading() && store.mode !== "shell" && showVariantControl()}>
                     <div

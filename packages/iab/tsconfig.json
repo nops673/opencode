@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "composite": true,
     "target": "ESNext",
     "module": "ESNext",
     "skipLibCheck": true,
@@ -9,9 +10,10 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "strict": true,
-    "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
     "outDir": "node_modules/.ts-dist",
+    "isolatedModules": true,
     "types": ["node"]
   },
   "include": ["src", "package.json"],

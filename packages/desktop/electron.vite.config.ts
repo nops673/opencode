@@ -2,7 +2,10 @@ import { sentryVitePlugin } from "@sentry/vite-plugin"
 import { defineConfig } from "electron-vite"
 import appPlugin from "@opencode-ai/app/vite"
 import * as fs from "node:fs/promises"
+import * as path from "node:path"
+import { fileURLToPath } from "node:url"
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const OPENCODE_SERVER_DIST = "../opencode/dist/node"
 
 const channel = (() => {
@@ -69,6 +72,16 @@ const require = __cjs_mod__.createRequire(import.meta.url);
         },
       },
       {
+        name: "opencode:iab-resolve",
+        enforce: "pre",
+        resolveId(id) {
+          if (!id.startsWith("@opencode-ai/iab")) return
+          const subpath = id.slice("@opencode-ai/iab".length + 1)
+          if (!subpath) return path.resolve(__dirname, "../iab/src/index.ts")
+          return path.resolve(__dirname, `../iab/src/${subpath}.ts`)
+        },
+      },
+      {
         name: "opencode:copy-server-assets",
         async writeBundle() {
           for (const l of await fs.readdir(OPENCODE_SERVER_DIST)) {
@@ -82,7 +95,7 @@ const require = __cjs_mod__.createRequire(import.meta.url);
   preload: {
     build: {
       rollupOptions: {
-        input: { index: "src/preload/index.ts" },
+        input: { index: "src/preload/index.ts", iab: "src/preload/iab.ts" },
         output: {
           format: "cjs",
           entryFileNames: "[name].js",

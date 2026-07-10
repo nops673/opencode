@@ -31,6 +31,7 @@ const DEFAULT_FILE_TREE_WIDTH = 200
 const DEFAULT_SESSION_WIDTH = 600
 const DEFAULT_TERMINAL_HEIGHT = 280
 const DEFAULT_REVIEW_PANEL_OPENED = false
+const DEFAULT_IAB_WIDTH = 400
 export type AvatarColorKey = (typeof AVATAR_COLOR_KEYS)[number]
 
 export function getAvatarColors(key?: string) {
@@ -286,6 +287,10 @@ export const { use: useLayout, provider: LayoutProvider } = createSimpleContext(
         },
         mobileSidebar: {
           opened: false,
+        },
+        iab: {
+          opened: false,
+          width: DEFAULT_IAB_WIDTH,
         },
         sessionTabs: {} as Record<string, SessionTabs>,
         sessionView: {} as Record<string, SessionView>,
@@ -741,6 +746,38 @@ export const { use: useLayout, provider: LayoutProvider } = createSimpleContext(
         },
         toggle() {
           setStore("mobileSidebar", "opened", (x) => !x)
+        },
+      },
+      iab: {
+        opened: createMemo(() => store.iab?.opened ?? false),
+        width: createMemo(() => store.iab?.width ?? DEFAULT_IAB_WIDTH),
+        open() {
+          if (!store.iab) {
+            setStore("iab", { opened: true, width: DEFAULT_IAB_WIDTH })
+            return
+          }
+          setStore("iab", "opened", true)
+        },
+        close() {
+          if (!store.iab) {
+            setStore("iab", { opened: false, width: DEFAULT_IAB_WIDTH })
+            return
+          }
+          setStore("iab", "opened", false)
+        },
+        toggle() {
+          if (!store.iab) {
+            setStore("iab", { opened: true, width: DEFAULT_IAB_WIDTH })
+            return
+          }
+          setStore("iab", "opened", (x) => !x)
+        },
+        resize(width: number) {
+          if (!store.iab) {
+            setStore("iab", { opened: true, width: DEFAULT_IAB_WIDTH })
+            return
+          }
+          setStore("iab", "width", width)
         },
       },
       pendingMessage: {

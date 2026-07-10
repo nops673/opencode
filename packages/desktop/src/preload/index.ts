@@ -123,3 +123,38 @@ const api: ElectronAPI = {
 }
 
 contextBridge.exposeInMainWorld("api", api)
+
+const iab = {
+  attach: (bounds?: { x: number; y: number; width: number; height: number }) =>
+    ipcRenderer.invoke("iab-attach", bounds),
+  detach: () => ipcRenderer.invoke("iab-detach"),
+  navigate: (url: string) => ipcRenderer.invoke("iab-navigate", url),
+  navigateBack: () => ipcRenderer.invoke("iab-navigate-back"),
+  navigateForward: () => ipcRenderer.invoke("iab-navigate-forward"),
+  reload: () => ipcRenderer.invoke("iab-reload"),
+  stop: () => ipcRenderer.invoke("iab-stop"),
+  getURL: () => ipcRenderer.invoke("iab-get-url"),
+  getTitle: () => ipcRenderer.invoke("iab-get-title"),
+  isLoading: () => ipcRenderer.invoke("iab-is-loading"),
+  evaluateJS: (code: string) => ipcRenderer.invoke("iab-evaluate-js", code),
+  captureScreenshot: () => ipcRenderer.invoke("iab-capture-screenshot"),
+  selectElement: (selector: string) => ipcRenderer.invoke("iab-select-element", selector),
+  getComputedStyles: (selector: string) => ipcRenderer.invoke("iab-get-computed-styles", selector),
+  onURLChanged: (cb: (url: string) => void) => {
+    const handler = (_: unknown, url: string) => cb(url)
+    ipcRenderer.on("iab-url-changed", handler)
+    return () => ipcRenderer.removeListener("iab-url-changed", handler)
+  },
+  onTitleChanged: (cb: (title: string) => void) => {
+    const handler = (_: unknown, title: string) => cb(title)
+    ipcRenderer.on("iab-title-changed", handler)
+    return () => ipcRenderer.removeListener("iab-title-changed", handler)
+  },
+  onLoadingChanged: (cb: (loading: boolean) => void) => {
+    const handler = (_: unknown, loading: boolean) => cb(loading)
+    ipcRenderer.on("iab-loading-changed", handler)
+    return () => ipcRenderer.removeListener("iab-loading-changed", handler)
+  },
+}
+
+contextBridge.exposeInMainWorld("iab", iab)

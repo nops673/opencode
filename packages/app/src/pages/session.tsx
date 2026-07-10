@@ -76,6 +76,7 @@ import {
   sessionPanelWidthMax,
 } from "@/pages/session/session-panel-width"
 import { SessionSidePanel } from "@/pages/session/session-side-panel"
+import { IabPanel } from "@/pages/session/iab-panel"
 import { sessionPanelLayout } from "@/pages/session/session-panel-layout"
 import { SessionReviewEmptyChangesV2 } from "@opencode-ai/session-ui/v2/session-review-empty-changes-v2"
 import { SessionReviewEmptyNoGitV2 } from "@opencode-ai/session-ui/v2/session-review-empty-no-git-v2"
@@ -447,7 +448,7 @@ export default function Page() {
   const desktopSessionResizeOpen = createMemo(() =>
     newSessionDesign() ? desktopV2ReviewOpen() || desktopTerminalOpen() : desktopReviewOpen(),
   )
-  const desktopSidePanelOpen = createMemo(() => desktopSessionResizeOpen() || desktopFileTreeOpen())
+  const desktopSidePanelOpen = createMemo(() => desktopSessionResizeOpen() || desktopFileTreeOpen() || layout.iab.opened())
   let panelRow: HTMLDivElement | undefined
   const [panelRowWidth, setPanelRowWidth] = createSignal<number>()
   createResizeObserver(
@@ -481,7 +482,9 @@ export default function Page() {
   const sessionPanelWidth = createMemo(() => {
     if (!desktopSidePanelOpen()) return "100%"
     if (desktopSessionResizeOpen()) return `${sessionPanelResizedWidth()}px`
-    return `calc(100% - ${layout.fileTree.width()}px)`
+    if (desktopFileTreeOpen()) return `calc(100% - ${layout.fileTree.width()}px)`
+    if (layout.iab.opened()) return `calc(100% - ${layout.iab.width()}px)`
+    return "100%"
   })
   const centered = createMemo(() => isDesktop() && (newSessionDesign() || !desktopReviewOpen()))
   const desktopV2PanelLayout = createMemo(() =>
@@ -2291,7 +2294,7 @@ export default function Page() {
                   />
                 </div>
               </Show>
-              <Show when={terminalOpen()}>
+<Show when={terminalOpen()}>
                 <div
                   classList={{
                     "min-h-0 shrink-0": desktopV2PanelLayout().stacked,
@@ -2303,12 +2306,16 @@ export default function Page() {
               </Show>
             </div>
           </Show>
+</Show>
+
+        <Show when={isDesktop() && layout.iab.opened()}>
+          <IabPanel />
+        </Show>
+
+        <Show when={!newSessionDesign()}>
+          <TerminalPanel />
         </Show>
       </div>
-
-      <Show when={!newSessionDesign()}>
-        <TerminalPanel />
-      </Show>
     </SessionRouteFrame>
   )
 }

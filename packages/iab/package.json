@@ -4,6 +4,13 @@
   "version": "0.0.1",
   "type": "module",
   "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./desktop/main": "./src/desktop/main.ts",
+    "./webview": "./src/webview/index.ts",
+    "./annotations/overlay": "./src/annotations/overlay.ts",
+    "./mcp/browser-tool": "./src/mcp/browser-tool.ts"
+  },
   "scripts": {
     "typecheck": "tsgo -b",
     "test": "vitest run",
