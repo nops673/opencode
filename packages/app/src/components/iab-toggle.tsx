@@ -17,7 +17,7 @@ export function IabToggle() {
       onClick={() => layout.iab.toggle()}
       title={iabOpened() ? "Close browser" : "Open browser"}
     >
-      <Icon name="sidebar-right" size="small" class="shrink-0" />
+      <Icon name="layout-right" size="small" class="shrink-0" />
       <span class="min-w-0 truncate leading-5">Browser</span>
     </button>
   )
