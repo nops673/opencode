@@ -448,7 +448,7 @@ export default function Page() {
   const desktopSessionResizeOpen = createMemo(() =>
     newSessionDesign() ? desktopV2ReviewOpen() || desktopTerminalOpen() : desktopReviewOpen(),
   )
-  const desktopSidePanelOpen = createMemo(() => desktopSessionResizeOpen() || desktopFileTreeOpen() || layout.iab.opened())
+  const desktopSidePanelOpen = createMemo(() => desktopSessionResizeOpen() || desktopFileTreeOpen())
   let panelRow: HTMLDivElement | undefined
   const [panelRowWidth, setPanelRowWidth] = createSignal<number>()
   createResizeObserver(
@@ -483,7 +483,6 @@ export default function Page() {
     if (!desktopSidePanelOpen()) return "100%"
     if (desktopSessionResizeOpen()) return `${sessionPanelResizedWidth()}px`
     if (desktopFileTreeOpen()) return `calc(100% - ${layout.fileTree.width()}px)`
-    if (layout.iab.opened()) return `calc(100% - ${layout.iab.width()}px)`
     return "100%"
   })
   const centered = createMemo(() => isDesktop() && (newSessionDesign() || !desktopReviewOpen()))
@@ -2308,14 +2307,15 @@ export default function Page() {
           </Show>
 </Show>
 
-        <Show when={isDesktop() && layout.iab.opened()}>
-          <IabPanel />
-        </Show>
-
-        <Show when={!newSessionDesign()}>
+<Show when={!newSessionDesign()}>
           <TerminalPanel />
         </Show>
       </div>
+      <Show when={layout.iab.opened()}>
+        <div class="absolute top-0 right-0 h-full border-l border-border-weak-base bg-surface-base z-50">
+          <IabPanel />
+        </div>
+      </Show>
     </SessionRouteFrame>
   )
 }
