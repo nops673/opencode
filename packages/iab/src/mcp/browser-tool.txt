@@ -1,0 +1,23 @@
+# Browser Tool (IAB)
+
+Controls a real browser embedded in the application sidebar. The agent can view and interact with live web pages, test applications, inspect elements, and capture screenshots.
+
+## Available actions
+
+- `navigate` — Open a URL in the browser. Use `url` parameter.
+- `back` — Go back in history.
+- `forward` — Go forward in history.
+- `reload` — Reload the current page.
+- `stop` — Stop loading.
+- `screenshot` — Capture a screenshot of the current page.
+- `evaluate` — Execute JavaScript in the page context. Use `code` parameter.
+- `select` — Get detailed info about a DOM element by CSS selector. Use `selector` parameter.
+- `styles` — Get computed styles of a DOM element. Use `selector` parameter.
+- `dom` — Get the full page HTML.
+
+## Best practices
+
+- Prefer `webfetch` for static content — the browser tool is for interactive pages.
+- Use `navigate` before `screenshot` or `select` to ensure the right page is loaded.
+- Use `evaluate` for complex DOM queries or interactions not covered by other actions.
+- The browser session persists between calls — tabs and state are preserved.

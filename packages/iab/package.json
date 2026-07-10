@@ -1,0 +1,22 @@
+{
+  "name": "@opencode-ai/iab",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsgo -b",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "electron": "42.3.3",
+    "typescript": "~5.6.2",
+    "vitest": "^3"
+  }
+}
